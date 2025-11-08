@@ -86,6 +86,7 @@ root/
 ### 2. State Management (React Context)
 
 The `ContentContext.tsx` manages:
+
 - `originalContent`: Unmodified content from file (immutable)
 - `currentContent`: Working copy being edited
 - `hasUnsavedChanges`: Boolean flag for dirty state
@@ -159,15 +160,15 @@ interface ContentSchema {
 }
 
 interface Section {
-  id: string;              // Unique section identifier
-  label: string;           // Display name in UI
-  type: string;            // "hero" | "contact" | etc.
+  id: string; // Unique section identifier
+  label: string; // Display name in UI
+  type: string; // "hero" | "contact" | etc.
   content: {
     heading?: string;
     paragraphs?: string[];
     links?: Link[];
   };
-  selector: string;        // CSS selector pointing to this section in HTML
+  selector: string; // CSS selector pointing to this section in HTML
 }
 ```
 
@@ -185,6 +186,7 @@ const contentMappings = {
 ```
 
 When adding new content sections:
+
 1. Add the section to `content.json`
 2. Add corresponding CSS selectors to `mappings.ts`
 3. Run validator to ensure selectors find elements: `validateSelectors(html, mappings)`

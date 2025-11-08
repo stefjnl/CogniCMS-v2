@@ -9,6 +9,7 @@ applyTo: "lib/content/**/*.ts,types/content.ts"
 These files handle the critical content extraction and injection logic. When modifying:
 
 ### extractor.ts
+
 - Extracts content from HTML using CSS selector mappings
 - Must maintain immutability of input HTML
 - Return type must match ContentSchema interface exactly
@@ -16,6 +17,7 @@ These files handle the critical content extraction and injection logic. When mod
 - Handle missing elements gracefully (return null or empty string, not errors)
 
 ### injector.ts
+
 - Injects modified content back into HTML while preserving structure
 - Never add extra wrapper divs or classes
 - Update text nodes only, preserve all attributes
@@ -23,6 +25,7 @@ These files handle the critical content extraction and injection logic. When mod
 - Preserve existing styling and event handlers
 
 ### mappings.ts
+
 - Maps JSON paths to CSS selectors
 - Use valid CSS selector syntax (test in browser inspector)
 - Document each selector with the content it targets
@@ -30,6 +33,7 @@ These files handle the critical content extraction and injection logic. When mod
 - Keep selectors simple and specific (avoid overly broad selectors)
 
 ### validator.ts
+
 - Validates that selectors exist in HTML
 - Checks for ambiguous selectors (should find exactly one element)
 - Provides helpful error messages for broken mappings
@@ -37,6 +41,7 @@ These files handle the critical content extraction and injection logic. When mod
 - Call validateSelectors(html, mappings) before extraction
 
 ### parser.ts
+
 - Utility functions for HTML parsing
 - Use cheerio for consistency
 - Handle malformed HTML gracefully
@@ -61,7 +66,7 @@ These files handle the critical content extraction and injection logic. When mod
 
 ```typescript
 // ✓ Good: Extract with fallback
-const text = element?.textContent?.trim() ?? '';
+const text = element?.textContent?.trim() ?? "";
 
 // ✓ Good: Create new objects (immutable)
 const updated = { ...original, field: newValue };
@@ -74,7 +79,7 @@ const element = doc.querySelector(selector);
 if (!element) return null; // or empty value
 
 // ✗ Bad: Throw on missing selector
-if (!element) throw new Error('Selector not found');
+if (!element) throw new Error("Selector not found");
 ```
 
 ## Testing Content Pipeline

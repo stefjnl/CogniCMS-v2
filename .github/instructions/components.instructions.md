@@ -9,6 +9,7 @@ applyTo: "components/cms/**/*.tsx"
 These are the main UI components that form the CMS interface. When adding or modifying:
 
 ### CMSLayout.tsx
+
 - Top-level container managing split panes (40% editor, 60% preview)
 - Use react-resizable-panels for draggable divider
 - Handle responsive layout: stack vertically on mobile (< 768px)
@@ -16,6 +17,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Manage layout state (pane widths) via URL query params if needed
 
 ### ContentEditor.tsx
+
 - Left pane: renders EditorForm for the currently active section
 - Gets active section from ContentContext
 - Updates currentContent in context as user types
@@ -23,6 +25,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Use React.memo() to prevent unnecessary re-renders
 
 ### EditorForm.tsx
+
 - Dynamically renders form fields based on content schema
 - Maps field types to input components:
   - string → Input component
@@ -34,6 +37,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Use ShadCN Label components for accessibility
 
 ### RichTextEditor.tsx
+
 - TipTap editor instance for formatted text
 - Configure with: bold, italic, link, heading levels
 - Preserve content between renders
@@ -41,6 +45,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Output as HTML string to content JSON
 
 ### SectionNavigator.tsx
+
 - Left sidebar accordion showing all sections from ContentContext
 - Sections mapping: `context.currentContent.sections`
 - Click section to set it as active in context
@@ -50,6 +55,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Sort sections by order in content.json (don't reorder)
 
 ### PreviewPane.tsx
+
 - Right pane: iframe showing live HTML with injected content
 - Updates on every currentContent change (debounced 300ms)
 - Use injector.ts to merge currentContent into HTML
@@ -58,6 +64,7 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Handle iframe sandbox security
 
 ### ActionBar.tsx
+
 - Sticky top bar with buttons:
   - "Save Draft" (secondary): Save to localStorage
   - "Publish" (primary): Save to server (phase 2)
@@ -72,10 +79,11 @@ These are the main UI components that form the CMS interface. When adding or mod
 - Never mutate state directly
 - Always dispatch updates through ContentContext setters
 - Use immutable patterns:
+
   ```typescript
   // ✓ Good
   const updated = { ...content, heading: newHeading };
-  
+
   // ✓ Good for arrays
   const newParagraphs = [...section.content.paragraphs];
   newParagraphs[index] = newText;
@@ -97,10 +105,10 @@ These are the main UI components that form the CMS interface. When adding or mod
 interface ComponentProps {
   // Required props first
   section: Section;
-  
+
   // Optional props second
   showDetails?: boolean;
-  
+
   // Event handlers last
   onChange?: (value: any) => void;
   onSave?: () => void;
