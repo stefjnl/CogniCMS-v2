@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CMSLayout } from "@/components/cms/CMSLayout";
 import { ContentProvider } from "@/lib/state/ContentContext";
 import { ContentSchema } from "@/types/content";
@@ -19,8 +20,17 @@ export default function Home() {
   const [data, setData] = useState<LoadedData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    // Check authentication first
+    const isAuthenticated = localStorage.getItem("cms-auth") === "true";
+
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+
     const loadContent = async () => {
       try {
         // Load from GitHub API only
@@ -47,7 +57,7 @@ export default function Home() {
     };
 
     loadContent();
-  }, []);
+  }, [router]);
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">

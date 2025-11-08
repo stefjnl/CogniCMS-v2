@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/lib/state/ContentContext";
-import { Save, RotateCcw, Upload, Clock } from "lucide-react";
+import { Save, RotateCcw, Upload, Clock, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function ActionBar() {
   const {
@@ -15,8 +16,14 @@ export function ActionBar() {
     history,
   } = useContent();
 
+  const router = useRouter();
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < history.length - 1;
+
+  const handleLogout = () => {
+    localStorage.removeItem("cms-auth");
+    router.push("/login");
+  };
 
   return (
     <div className="border-b bg-white px-6 py-3 flex items-center justify-between shadow-sm">
@@ -73,6 +80,16 @@ export function ActionBar() {
         >
           <Upload className="w-4 h-4" />
           {isSaving ? "Publishing..." : "Publish to GitHub"}
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleLogout}
+          className="gap-2"
+          title="Logout"
+        >
+          <LogOut className="w-4 h-4" />
         </Button>
       </div>
     </div>
