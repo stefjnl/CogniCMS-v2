@@ -6,16 +6,16 @@ import { contentMappings } from "./mappings";
  * Parse HTML string into a Cheerio object for manipulation
  */
 export function parseHTML(html: string): cheerio.CheerioAPI {
-  return cheerio.load(html, {
-    decodeEntities: false, // Preserve HTML entities
-    _useHtmlParser2: true, // Use html-parser2 for better HTML5 support
-  });
+  return cheerio.load(html);
 }
 
 /**
  * Get text content from an element using a CSS selector
  */
-export function getTextContent($: cheerio.CheerioAPI, selector: string): string {
+export function getTextContent(
+  $: cheerio.CheerioAPI,
+  selector: string
+): string {
   const element = $(selector);
   if (element.length === 0) {
     console.warn(`Selector not found: ${selector}`);
@@ -27,7 +27,10 @@ export function getTextContent($: cheerio.CheerioAPI, selector: string): string 
 /**
  * Get HTML content from an element using a CSS selector
  */
-export function getHTMLContent($: cheerio.CheerioAPI, selector: string): string {
+export function getHTMLContent(
+  $: cheerio.CheerioAPI,
+  selector: string
+): string {
   const element = $(selector);
   if (element.length === 0) {
     console.warn(`Selector not found: ${selector}`);
@@ -114,7 +117,10 @@ export function serializeHTML($: cheerio.CheerioAPI): string {
 /**
  * Validate that a selector exists in the HTML
  */
-export function selectorExists($: cheerio.CheerioAPI, selector: string): boolean {
+export function selectorExists(
+  $: cheerio.CheerioAPI,
+  selector: string
+): boolean {
   return $(selector).length > 0;
 }
 

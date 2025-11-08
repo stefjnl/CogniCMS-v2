@@ -43,7 +43,9 @@ export function ActionBar() {
       <div className="flex items-center gap-3">
         {/* Undo/Redo indicators */}
         <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-md">
-          <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">⌘Z</kbd>
+          <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">
+            ⌘Z
+          </kbd>
           <span>Undo</span>
           <span className={canUndo ? "text-green-600" : "text-gray-400"}>
             {canUndo ? "✓" : "—"}
@@ -63,24 +65,14 @@ export function ActionBar() {
         </Button>
 
         <Button
-          variant="secondary"
+          variant="default"
           size="sm"
           onClick={saveDraft}
           disabled={isSaving || !hasUnsavedChanges}
-          className="gap-2"
-        >
-          <Save className="w-4 h-4" />
-          {isSaving ? "Saving..." : "Save Draft"}
-        </Button>
-
-        <Button
-          variant="default"
-          size="sm"
-          disabled
           className="gap-2 bg-[#c89b5f] hover:bg-[#b88b4f]"
         >
           <Upload className="w-4 h-4" />
-          Publish
+          {isSaving ? "Publishing..." : "Publish to GitHub"}
         </Button>
       </div>
     </div>

@@ -5,6 +5,10 @@ export interface ContentMetadata {
   description: string;
   keywords?: string;
   lastModified: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
 }
 
 export interface Link {
@@ -125,7 +129,17 @@ export type SectionContent =
 export interface Section {
   id: string;
   label: string;
-  type: "hero" | "banner" | "content" | "team" | "events" | "form" | "info" | "faq" | "contact" | "footer";
+  type:
+    | "hero"
+    | "banner"
+    | "content"
+    | "team"
+    | "events"
+    | "form"
+    | "info"
+    | "faq"
+    | "contact"
+    | "footer";
   selector: string;
   content: SectionContent;
 }
@@ -173,6 +187,14 @@ export interface AppState {
   originalContent: ContentSchema | null;
   currentContent: ContentSchema | null;
   hasUnsavedChanges: boolean;
+
+  // HTML and SHA (for GitHub integration)
+  originalHtml?: string;
+  currentHtml?: string;
+  sha?: {
+    html: string;
+    content: string;
+  };
 
   // UI
   activeSection: string | null;

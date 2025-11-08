@@ -1,23 +1,51 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { ContentSchema, AppState, AppActions, SectionContent } from "@/types/content";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import {
+  ContentSchema,
+  AppState,
+  AppActions,
+  SectionContent,
+} from "@/types/content";
 import { toast } from "sonner";
 
 // Create context
 const ContentContext = createContext<(AppState & AppActions) | null>(null);
 
+// Extended state interface to include HTML and SHA
+interface ExtendedAppState extends AppState {
+  originalHtml?: string;
+  currentHtml?: string;
+  sha?: {
+    html: string;
+    content: string;
+  };
+}
+
 // Provider component
 export function ContentProvider({
   children,
   initialContent,
+  initialHtml,
+  initialSha,
 }: {
   children: React.ReactNode;
   initialContent: ContentSchema;
+  initialHtml?: string;
+  initialSha?: { html: string; content: string };
 }) {
-  const [state, setState] = useState<AppState>({
+  const [state, setState] = useState<ExtendedAppState>({
     originalContent: initialContent,
     currentContent: initialContent,
+    originalHtml: initialHtml,
+    currentHtml: initialHtml,
+    sha: initialSha,
     hasUnsavedChanges: false,
     activeSection: null,
     previewDevice: "desktop",
@@ -115,39 +143,104 @@ export function ContentProvider({
     }));
   }, []);
 
-  // Save draft to localStorage
+  // Save to GitHub
   const saveDraft = useCallback(async () => {
     setState((prev) => ({ ...prev, isSaving: true }));
 
     try {
       if (state.currentContent) {
+        // Always save to localStorage first for quick recovery
         localStorage.setItem(
           "cognicms-draft",
           JSON.stringify(state.currentContent)
         );
+        if (state.originalHtml) {
+          localStorage.setItem("cognicms-draft-html", state.originalHtml);
+        }
+        if (state.sha) {
+          localStorage.setItem("cognicms-draft-sha", JSON.stringify(state.sha));
+        }
         localStorage.setItem(
           "cognicms-draft-timestamp",
           new Date().toISOString()
         );
 
-        setState((prev) => ({
-          ...prev,
-          isSaving: false,
-          lastSaved: new Date(),
-          hasUnsavedChanges: false,
-        }));
+        // Check if we have GitHub integration (SHA means we loaded from GitHub)
+        if (!state.sha || !state.originalHtml) {
+          // No GitHub integration - just save to localStorage
+          setState((prev) => ({
+            ...prev,
+            isSaving: false,
+            lastSaved: new Date(),
+            hasUnsavedChanges: false,
+            originalContent: state.currentContent!,
+          }));
+          toast.info("Draft saved locally (GitHub not configured)");
+          console.log("No GitHub SHA - saving to localStorage only");
+          return;
+        }
 
-        toast.success("Draft saved successfully!");
+        // Save to GitHub
+        console.log("Saving to GitHub with SHA:", state.sha);
+        const response = await fetch("/api/content/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: state.currentContent,
+            html: state.originalHtml,
+            htmlSha: state.sha.html,
+            contentSha: state.sha.content,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to save to GitHub");
+        }
+
+        console.log("GitHub save successful, reloading content...");
+
+        // Reload content to get new SHAs
+        const loadResponse = await fetch("/api/content/load");
+        if (loadResponse.ok) {
+          const newData = await loadResponse.json();
+          setState((prev) => ({
+            ...prev,
+            isSaving: false,
+            lastSaved: new Date(),
+            hasUnsavedChanges: false,
+            originalContent: state.currentContent!,
+            originalHtml: newData.html,
+            sha: newData.sha,
+          }));
+        } else {
+          setState((prev) => ({
+            ...prev,
+            isSaving: false,
+            lastSaved: new Date(),
+            hasUnsavedChanges: false,
+            originalContent: state.currentContent!,
+          }));
+        }
+
+        toast.success("Changes published to GitHub!");
+        console.log("Content published to GitHub successfully");
       }
     } catch (error) {
+      console.error("Error saving:", error);
       setState((prev) => ({
         ...prev,
         isSaving: false,
-        errors: [...prev.errors, "Failed to save draft"],
+        errors: [
+          ...prev.errors,
+          error instanceof Error ? error.message : "Failed to save",
+        ],
       }));
-      toast.error("Failed to save draft");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save changes"
+      );
     }
-  }, [state.currentContent]);
+  }, [state.currentContent, state.originalHtml, state.sha]);
 
   // Revert changes
   const revertChanges = useCallback(() => {
