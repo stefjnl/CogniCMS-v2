@@ -35,16 +35,21 @@ export function ThemeToggle() {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   // Debounced theme change for performance optimization
+  const timeoutRef = React.useRef<NodeJS.Timeout>();
+
   const debouncedSetTheme = React.useCallback(
-    ((newTheme: Theme) => {
+    (newTheme: Theme) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
       setDebouncedTheme(newTheme);
-      const timer = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setTheme(newTheme);
         setDebouncedTheme(null);
         setIsChanging(false);
       }, DEBOUNCE_DELAY);
-      return () => clearTimeout(timer);
-    }) as React.Dispatch<React.SetStateAction<Theme>>,
+    },
     [setTheme]
   );
 
@@ -81,15 +86,13 @@ export function ThemeToggle() {
   // Mount effect with proper cleanup
   React.useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
+    return () => {
+      setMounted(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, []);
-
-  // Focus management for screen readers
-  React.useEffect(() => {
-    if (mounted && buttonRef.current) {
-      buttonRef.current.focus();
-    }
-  }, [mounted]);
 
   // Generate accessible labels
   const getAriaLabel = React.useCallback(() => {
