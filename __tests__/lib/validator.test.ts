@@ -10,7 +10,6 @@ import {
   suggestSelectorFixes,
   validateHTMLStructure,
 } from "@/lib/content/validator";
-import { contentMappings } from "@/lib/content/mappings";
 
 jest.mock("@/lib/content/mappings", () => ({
   contentMappings: [
