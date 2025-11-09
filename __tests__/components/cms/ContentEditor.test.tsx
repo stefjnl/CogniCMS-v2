@@ -40,11 +40,11 @@ describe("[components/cms/ContentEditor.tsx](components/cms/ContentEditor.tsx:1)
 
     render(<ContentEditor />);
 
-    // Assert the complete empty state message appears as a single text node
     expect(
-      screen.getByText(
-        /no section selected.*select a section from the list above to start editing/i
-      )
+      screen.getByText(/no section selected/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/select a section from the list above to start editing/i)
     ).toBeInTheDocument();
     expect(screen.queryByTestId("editor-form")).not.toBeInTheDocument();
   });

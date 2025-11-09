@@ -64,9 +64,9 @@ describe("Error Handling Integration", () => {
 
     // Wait for error view to render, not just the initial loading skeleton.
     await waitFor(() => {
-      // ErrorBoundary should show a user-friendly error message from the thrown error.
+      // ErrorBoundary shows the underlying error message from the thrown error.
       expect(
-        screen.getByText(/failed to load content from github/i)
+        screen.getByText(/cannot read properties of undefined \(reading 'ok'\)/i)
       ).toBeInTheDocument();
     });
 

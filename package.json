@@ -54,40 +54,5 @@
     "ts-jest": "^29.4.5",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/$1"
-    },
-    "testMatch": [
-      "<rootDir>/__tests__/**/*.(spec|test).(ts|tsx)"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "app/**/*.{ts,tsx}",
-      "components/**/*.{ts,tsx}",
-      "lib/**/*.{ts,tsx}",
-      "!**/*.d.ts",
-      "!**/types/**"
-    ],
-    "coverageDirectory": "coverage",
-    "coverageReporters": [
-      "text",
-      "lcov",
-      "html"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
-      }
-    }
   }
 }

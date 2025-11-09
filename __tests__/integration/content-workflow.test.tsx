@@ -47,6 +47,18 @@ const sampleSha = { html: "html-sha", content: "content-sha" };
 /**
  * Test wrapper for CMSLayout composed with ContentProvider, mirroring real app/page.tsx usage.
  */
+function CMSWithProvider() {
+  return (
+    <ContentProvider
+      initialContent={sampleContent as any}
+      initialHtml={sampleHtml}
+      initialSha={sampleSha}
+    >
+      <CMSLayout />
+    </ContentProvider>
+  );
+}
+
 /**
  * Convenience to access context inside tests for assertions.
  */
