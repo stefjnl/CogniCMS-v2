@@ -65,18 +65,30 @@ describe("ContentContext", () => {
 
     const { result } = renderHook(() => useContent(), { wrapper });
 
-    // Basic shape assertions to confirm provider wiring.
-    // Adapt to the actual shape from ContentContext.tsx.
-    expect(result.current).toHaveProperty("state");
-    expect(result.current).toHaveProperty("setState");
+    // Assert the context provides the correct properties.
+    expect(result.current).toHaveProperty("currentContent");
+    expect(result.current).toHaveProperty("updateContent");
+    expect(result.current).toHaveProperty("activeSection");
+
+    // Save original content for restoration.
+    const originalContent = result.current.currentContent;
+    const updatedTitle = "New Title";
 
     act(() => {
-      (result.current as any).setState((prev: any) => ({
-        ...prev,
-        testFlag: true,
-      }));
+      result.current.updateContent({
+        ...result.current.currentContent,
+        metadata: {
+          ...result.current.currentContent.metadata,
+          title: updatedTitle,
+        },
+      });
     });
 
-    expect((result.current as any).state.testFlag).toBe(true);
+    expect(result.current.currentContent.metadata.title).toBe(updatedTitle);
+
+    // Restore original content to avoid side effects.
+    act(() => {
+      result.current.updateContent(originalContent);
+    });
   });
 });
