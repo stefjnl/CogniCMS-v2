@@ -42,9 +42,17 @@ describe("components/cms/ContentEditor", () => {
 
     render(<ContentEditor />);
 
+<<<<<<< HEAD
     expect(screen.getByText(/no section selected/i)).toBeInTheDocument();
     expect(
       screen.getByText(/select a section from the list above to start editing/i)
+=======
+    // Assert the complete empty state message appears as a single text node
+    expect(
+      screen.getByText(
+        /no section selected.*select a section from the list above to start editing/i
+      )
+>>>>>>> 558afafd13f48d25d127e172fa8c0be307e96f2e
     ).toBeInTheDocument();
     expect(screen.queryByTestId("editor-form")).not.toBeInTheDocument();
   });
