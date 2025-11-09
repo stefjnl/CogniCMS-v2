@@ -53,10 +53,6 @@ function createBaseState() {
   };
 }
 
-  },
-};
-}
-
 describe("components/cms/ActionBar", () => {
   beforeEach(() => {
     jest.useFakeTimers();
@@ -235,7 +231,7 @@ describe("components/cms/ActionBar", () => {
     window.localStorage.setItem("cms-auth", "token");
     render(<ActionBar />);
 
-    const logout = screen.getByRole("button", { name: "" }); // icon-only with title
+    const logout = screen.getByRole("button", { name: "Logout" });
     expect(logout).toHaveAttribute("title", "Logout");
 
     fireEvent.click(logout);
