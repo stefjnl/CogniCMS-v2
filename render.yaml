@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: cognicms-v2
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GITHUB_TOKEN
+        sync: false # Set manually in Render dashboard
+      - key: GITHUB_OWNER
+        value: stefjnl
+      - key: GITHUB_REPO
+        value: zincafe-zweeloo
+      - key: GITHUB_BRANCH
+        value: main
+      - key: NEXT_PUBLIC_CMS_PASSWORD
+        sync: false # Set manually in Render dashboard
