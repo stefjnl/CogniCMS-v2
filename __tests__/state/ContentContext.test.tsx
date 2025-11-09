@@ -98,7 +98,6 @@ function Consumer() {
 
 describe("ContentProvider", () => {
   it("renders children and provides context value", () => {
-    const wrapper = createWrapper();
     const { getByTestId } = render(
       <ContentProvider
         initialContent={createSampleContent()}
