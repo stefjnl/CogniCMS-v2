@@ -4,6 +4,9 @@ import { renderHook } from "@testing-library/react";
 import { ContentProvider, useContent } from "@/lib/state/ContentContext";
 import type { ContentSchema } from "@/types/content";
 
+// Capture original globals once so we can restore them after tests
+const originalFetch = global.fetch;
+const originalToast = (global as any).toast;
 // Helper: realistic baseline ContentSchema
 const createSampleContent = (): ContentSchema => ({
   metadata: {
@@ -412,16 +415,12 @@ describe("State management actions", () => {
 });
 
 describe("saveDraft side effects and error handling", () => {
-  const originalToastInfo = (global as any).toast?.info;
-  const originalToastSuccess = (global as any).toast?.success;
-  const originalToastError = (global as any).toast?.error;
-
   beforeEach(() => {
     // Override fetch and reset localStorage per test
     (global as any).fetch = jest.fn();
     window.localStorage.clear();
 
-    // Provide minimal toast mock to avoid imports issues in this isolated suite
+    // Provide minimal toast mock; will be fully restored in afterEach
     (global as any).toast = {
       info: jest.fn(),
       success: jest.fn(),
@@ -429,12 +428,24 @@ describe("saveDraft side effects and error handling", () => {
     };
   });
 
-  afterAll(() => {
-    (global as any).toast = {
-      info: originalToastInfo,
-      success: originalToastSuccess,
-      error: originalToastError,
-    };
+  afterEach(() => {
+    // Restore fetch
+    if (typeof originalFetch === "undefined") {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete (global as any).fetch;
+    } else {
+      (global as any).fetch = originalFetch;
+    }
+
+    // Restore toast
+    if (typeof originalToast === "undefined") {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete (global as any).toast;
+    } else {
+      (global as any).toast = originalToast;
+    }
+
+    jest.resetAllMocks();
   });
 
   it("saveDraft without GitHub SHA saves only to localStorage and updates state", async () => {
@@ -559,20 +570,43 @@ describe("saveDraft side effects and error handling", () => {
 });
 
 describe("Side effects: auto-save, keyboard shortcuts, beforeunload", () => {
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
-  });
-
   beforeEach(() => {
+    jest.useFakeTimers();
+
     (global as any).fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => ({}),
     });
     window.localStorage.clear();
+
+    // Provide minimal toast mock; will be restored in afterEach
+    (global as any).toast = {
+      info: jest.fn(),
+      success: jest.fn(),
+      error: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+
+    // Restore fetch
+    if (typeof originalFetch === "undefined") {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete (global as any).fetch;
+    } else {
+      (global as any).fetch = originalFetch;
+    }
+
+    // Restore toast
+    if (typeof originalToast === "undefined") {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete (global as any).toast;
+    } else {
+      (global as any).toast = originalToast;
+    }
+
+    jest.resetAllMocks();
   });
 
   it("auto-save triggers after 30 seconds of unsaved changes", async () => {

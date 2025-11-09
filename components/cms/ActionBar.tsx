@@ -88,6 +88,7 @@ export function ActionBar() {
           onClick={handleLogout}
           className="gap-2"
           title="Logout"
+          aria-label="Logout"
         >
           <LogOut className="w-4 h-4" />
         </Button>
