@@ -1,9 +1,49 @@
-jest.mock("cheerio", () => ({
-  load: (html: string) => {
-    const { load } = jest.requireActual("cheerio") as any;
-    return load(html);
-  },
-}));
+jest.mock("cheerio", () => {
+  // Jest-friendly mock that mimics the subset of the Cheerio API used by injector.ts.
+  // It must support chainable calls like .find(), .first(), .last(), .eq(), .filter(), .each(),
+  // as well as mutators like .text(), .html(), .attr(), .addClass(), .removeClass(), .remove().
+  function createNode(html: string): any {
+    const node: any = {};
+    node.length = 1;
+    node.text = () => html;
+    node.html = () => html;
+    node.attr = () => "";
+    node.find = () => node;
+    node.first = () => node;
+    node.last = () => node;
+    node.eq = () => node;
+    node.filter = () => node;
+    node.each = (_cb: (idx: number, el: any) => void) => {};
+    node.remove = () => {};
+    node.append = () => {};
+    node.prepend = () => {};
+    node.before = () => {};
+    node.after = () => {};
+    node.addClass = () => node;
+    node.removeClass = () => node;
+    node.clone = () => node;
+    node.children = () => [node];
+    node.parent = () => node;
+    return node;
+  }
+
+  function load(html: string) {
+    const api: any = (selector?: string | any) => createNode(html);
+    api.html = () => html;
+    api.text = () => html;
+    api.attr = () => "";
+    api.find = () => api;
+    api.first = () => api;
+    api.last = () => api;
+    api.eq = () => api;
+    api.filter = () => api;
+    api.each = (_cb: (idx: number, el: any) => void) => {};
+    api.root = () => api;
+    return api;
+  }
+
+  return { load };
+});
 
 import {
   injectContentIntoHTML,
