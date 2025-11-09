@@ -670,11 +670,6 @@ describe("Side effects: auto-save, keyboard shortcuts, beforeunload", () => {
       });
     });
 
-    const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
-      // The real effect logic: sets e.returnValue = ""
-      // We call the same logic indirectly by dispatching, so just keep reference type-safe
-    };
-
     // Simulate the actual browser BeforeUnloadEvent shape
     const event = new Event("beforeunload") as any as BeforeUnloadEvent;
     Object.defineProperty(event, "returnValue", {
