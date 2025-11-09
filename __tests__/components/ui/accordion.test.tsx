@@ -7,7 +7,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 
-describe("[components/ui/accordion.tsx](components/ui/accordion.tsx:1)", () => {
+describe("components/ui/accordion", () => {
   test("renders Accordion root container", () => {
     render(
       <Accordion type="single">

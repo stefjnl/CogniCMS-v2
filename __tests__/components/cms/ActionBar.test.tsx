@@ -53,7 +53,11 @@ function createBaseState() {
   };
 }
 
-describe("[components/cms/ActionBar.tsx](components/cms/ActionBar.tsx:1)", () => {
+  },
+};
+}
+
+describe("components/cms/ActionBar", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date("2024-01-01T12:00:00Z"));

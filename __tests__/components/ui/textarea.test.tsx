@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Textarea } from "@/components/ui/textarea";
 
-describe("[components/ui/textarea.tsx](components/ui/textarea.tsx:1)", () => {
+describe("components/ui/textarea", () => {
   test("renders textarea element with base classes", () => {
     render(<Textarea aria-label="test-textarea" />);
 
@@ -35,10 +35,7 @@ describe("[components/ui/textarea.tsx](components/ui/textarea.tsx:1)", () => {
 
   test("supports uncontrolled usage with defaultValue", () => {
     render(
-      <Textarea
-        aria-label="uncontrolled-textarea"
-        defaultValue="default"
-      />
+      <Textarea aria-label="uncontrolled-textarea" defaultValue="default" />
     );
 
     const textarea = screen.getByLabelText(
@@ -51,13 +48,7 @@ describe("[components/ui/textarea.tsx](components/ui/textarea.tsx:1)", () => {
   });
 
   test("passes through disabled and rows props", () => {
-    render(
-      <Textarea
-        aria-label="disabled-textarea"
-        disabled
-        rows={5}
-      />
-    );
+    render(<Textarea aria-label="disabled-textarea" disabled rows={5} />);
 
     const textarea = screen.getByLabelText("disabled-textarea");
     expect(textarea).toBeDisabled();
@@ -66,10 +57,7 @@ describe("[components/ui/textarea.tsx](components/ui/textarea.tsx:1)", () => {
 
   test("applies custom className", () => {
     render(
-      <Textarea
-        aria-label="custom-class-textarea"
-        className="custom-class"
-      />
+      <Textarea aria-label="custom-class-textarea" className="custom-class" />
     );
 
     const textarea = screen.getByLabelText("custom-class-textarea");

@@ -130,7 +130,10 @@ const baseFooterSection = {
   },
 };
 
-function mockContext(section: any, overrides?: Partial<ReturnType<typeof createContextValue>>) {
+function mockContext(
+  section: any,
+  overrides?: Partial<ReturnType<typeof createContextValue>>
+) {
   const value = createContextValue(section, overrides);
   mockedUseContent.mockReturnValue(value as any);
   return value;
@@ -154,7 +157,7 @@ function createContextValue(
   };
 }
 
-describe("[components/cms/EditorForm.tsx](components/cms/EditorForm.tsx:1)", () => {
+describe("components/cms/EditorForm", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -172,7 +175,11 @@ describe("[components/cms/EditorForm.tsx](components/cms/EditorForm.tsx:1)", () 
 
   test("returns null when no activeSection", () => {
     mockedUseContent.mockReturnValue({
-      currentContent: { id: "page", title: "Test", sections: [baseHeroSection] },
+      currentContent: {
+        id: "page",
+        title: "Test",
+        sections: [baseHeroSection],
+      },
       activeSection: null,
       updateSection: jest.fn(),
     } as any);

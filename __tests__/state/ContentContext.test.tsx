@@ -4,9 +4,6 @@ import { renderHook } from "@testing-library/react";
 import { ContentProvider, useContent } from "@/lib/state/ContentContext";
 import type { ContentSchema } from "@/types/content";
 
-// Use fake timers for autosave and beforeunload timing
-jest.useFakeTimers();
-
 // Helper: realistic baseline ContentSchema
 const createSampleContent = (): ContentSchema => ({
   metadata: {
@@ -83,7 +80,8 @@ function createWrapper(
 function Consumer() {
   const ctx = useContent();
   return (
-    <div data-testid="consumer"
+    <div
+      data-testid="consumer"
       data-preview-device={ctx.previewDevice}
       data-active-section={ctx.activeSection ?? ""}
       data-show-editable-regions={ctx.showEditableRegions ? "true" : "false"}
@@ -232,9 +230,7 @@ describe("State management actions", () => {
     expect(updatedSection?.content).toMatchObject({ heading: "New Heading" });
 
     // history updated
-    expect(result.current.historyIndex).toBe(
-      result.current.history.length - 1
-    );
+    expect(result.current.historyIndex).toBe(result.current.history.length - 1);
     expect(result.current.hasUnsavedChanges).toBe(true);
   });
 
@@ -348,7 +344,9 @@ describe("State management actions", () => {
     });
 
     expect(result.current.historyIndex).toBe(0);
-    expect(result.current.currentContent?.metadata.title).toBe(initial.metadata.title);
+    expect(result.current.currentContent?.metadata.title).toBe(
+      initial.metadata.title
+    );
     expect(result.current.hasUnsavedChanges).toBe(false);
 
     // further undo at index 0 should no-op
@@ -456,7 +454,9 @@ describe("saveDraft side effects and error handling", () => {
 
     // localStorage keys
     expect(window.localStorage.getItem("cognicms-draft")).toBeTruthy();
-    expect(window.localStorage.getItem("cognicms-draft-timestamp")).toBeTruthy();
+    expect(
+      window.localStorage.getItem("cognicms-draft-timestamp")
+    ).toBeTruthy();
 
     // state updates
     expect(result.current.isSaving).toBe(false);
@@ -497,7 +497,9 @@ describe("saveDraft side effects and error handling", () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(result.current.isSaving).toBe(false);
     expect(result.current.hasUnsavedChanges).toBe(false);
-    expect(result.current.originalContent).toEqual(result.current.currentContent);
+    expect(result.current.originalContent).toEqual(
+      result.current.currentContent
+    );
     expect(result.current.originalHtml).toBe("<html>new</html>");
     expect(result.current.sha).toEqual({
       html: "new-sha-html",
@@ -538,7 +540,9 @@ describe("saveDraft side effects and error handling", () => {
       initialSha: { html: "sha-html", content: "sha-content" },
     });
 
-    (global as any).fetch = jest.fn().mockRejectedValueOnce(new Error("Network down"));
+    (global as any).fetch = jest
+      .fn()
+      .mockRejectedValueOnce(new Error("Network down"));
 
     const { result } = renderHook(() => useContent(), { wrapper });
 
@@ -548,12 +552,22 @@ describe("saveDraft side effects and error handling", () => {
 
     expect(result.current.isSaving).toBe(false);
     expect(
-      result.current.errors.some((e) => e.includes("Network down") || e.includes("Failed"))
+      result.current.errors.some(
+        (e) => e.includes("Network down") || e.includes("Failed")
+      )
     ).toBe(true);
   });
 });
 
 describe("Side effects: auto-save, keyboard shortcuts, beforeunload", () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
     (global as any).fetch = jest.fn().mockResolvedValue({
       ok: true,
@@ -670,23 +684,21 @@ describe("Side effects: auto-save, keyboard shortcuts, beforeunload", () => {
       });
     });
 
-    const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
-      // The real effect logic: sets e.returnValue = ""
-      // We call the same logic indirectly by dispatching, so just keep reference type-safe
-    };
+    // Create a cancelable beforeunload event without pre-setting returnValue
+    const event = new Event("beforeunload", {
+      cancelable: true,
+    }) as any as BeforeUnloadEvent;
+    // Do not set returnValue before dispatch - let the handler set it
+    expect(event.returnValue).toBeUndefined();
 
-    // Simulate the actual browser BeforeUnloadEvent shape
-    const event = new Event("beforeunload") as any as BeforeUnloadEvent;
-    Object.defineProperty(event, "returnValue", {
-      writable: true,
-      configurable: true,
-      value: "",
-    });
+    window.dispatchEvent(event);
 
-    window.dispatchEvent(event as any);
+    // After dispatch, the listener should have set returnValue to a non-empty string
+    // or preventDefault should have been called (both indicate the handler ran)
+    const handlerSetReturnValue =
+      event.returnValue !== "" && event.returnValue !== undefined;
+    const handlerCalledPreventDefault = event.defaultPrevented;
 
-    // JSDOM behavior: handler sets a non-empty value (commonly a string or true-like)
-    // Our implementation sets "", which is still a defined value.
-    expect(event.returnValue).not.toBeUndefined();
+    expect(handlerSetReturnValue || handlerCalledPreventDefault).toBe(true);
   });
 });

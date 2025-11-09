@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Input } from "@/components/ui/input";
 
-describe("[components/ui/input.tsx](components/ui/input.tsx:1)", () => {
+describe("components/ui/input", () => {
   test("renders input element with base classes", () => {
     render(<Input aria-label="test-input" />);
 
@@ -24,9 +24,7 @@ describe("[components/ui/input.tsx](components/ui/input.tsx:1)", () => {
       />
     );
 
-    const input = screen.getByLabelText(
-      "controlled-input"
-    ) as HTMLInputElement;
+    const input = screen.getByLabelText("controlled-input") as HTMLInputElement;
     expect(input.value).toBe("value");
 
     fireEvent.change(input, { target: { value: "next" } });
@@ -34,12 +32,7 @@ describe("[components/ui/input.tsx](components/ui/input.tsx:1)", () => {
   });
 
   test("supports uncontrolled usage with defaultValue", () => {
-    render(
-      <Input
-        aria-label="uncontrolled-input"
-        defaultValue="default"
-      />
-    );
+    render(<Input aria-label="uncontrolled-input" defaultValue="default" />);
 
     const input = screen.getByLabelText(
       "uncontrolled-input"
@@ -51,13 +44,7 @@ describe("[components/ui/input.tsx](components/ui/input.tsx:1)", () => {
   });
 
   test("passes through type and disabled props", () => {
-    render(
-      <Input
-        aria-label="email-input"
-        type="email"
-        disabled
-      />
-    );
+    render(<Input aria-label="email-input" type="email" disabled />);
 
     const input = screen.getByLabelText("email-input");
     expect(input).toHaveAttribute("type", "email");
@@ -65,12 +52,7 @@ describe("[components/ui/input.tsx](components/ui/input.tsx:1)", () => {
   });
 
   test("applies custom className", () => {
-    render(
-      <Input
-        aria-label="custom-class-input"
-        className="custom-class"
-      />
-    );
+    render(<Input aria-label="custom-class-input" className="custom-class" />);
 
     const input = screen.getByLabelText("custom-class-input");
     const classes = input.getAttribute("class") || "";

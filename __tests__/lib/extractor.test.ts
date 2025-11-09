@@ -60,7 +60,7 @@ describe("extractor utilities", () => {
 
     test("extracts HTML when type is html", () => {
       const value = extractField(html, ".rich", "html");
-      expect(value).toBe('Some <strong>HTML</strong> content');
+      expect(value).toBe("Some <strong>HTML</strong> content");
     });
 
     test("extracts attribute when type is attribute and attribute provided", () => {
@@ -85,7 +85,7 @@ describe("extractor utilities", () => {
       const value = extractField(
         html,
         ".title",
-        "text" as any /* simulate invalid type */
+        "unsupported" as any /* simulate invalid type */
       );
       // Implementation only handles "text" | "html" | "attribute"
       // anything else should fall through to final `return ""`
@@ -94,9 +94,7 @@ describe("extractor utilities", () => {
 
     test("handles invalid HTML input gracefully", () => {
       const invalid = "<div>Unclosed";
-      expect(() =>
-        extractField(invalid, "div", "text")
-      ).not.toThrow();
+      expect(() => extractField(invalid, "div", "text")).not.toThrow();
       // Cheerio will still produce a node; ensure we get something string-like
       const value = extractField(invalid, "div", "text");
       expect(typeof value).toBe("string");
@@ -135,10 +133,7 @@ describe("extractor utilities", () => {
 
     test("treats missing selector as change when HTML differs", () => {
       // Remove .lead in current HTML
-      const updated = html.replace(
-        '<p class="lead">Lead text</p>',
-        ""
-      );
+      const updated = html.replace('<p class="lead">Lead text</p>', "");
       const result = detectHTMLChanges(html, updated, selectors);
       expect(result).toContain(".lead");
     });
@@ -151,7 +146,9 @@ describe("extractor utilities", () => {
     test("handles invalid HTML inputs without throwing", () => {
       const originalInvalid = "<div>One";
       const currentInvalid = "<div>Two";
-      const result = detectHTMLChanges(originalInvalid, currentInvalid, ["div"]);
+      const result = detectHTMLChanges(originalInvalid, currentInvalid, [
+        "div",
+      ]);
       // Cheerio will parse; different content should be detected
       expect(result).toEqual(["div"]);
     });

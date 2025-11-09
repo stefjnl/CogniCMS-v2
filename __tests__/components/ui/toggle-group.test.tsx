@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-describe("[components/ui/toggle-group.tsx](components/ui/toggle-group.tsx:1)", () => {
+describe("components/ui/toggle-group", () => {
   test("renders ToggleGroup container with base layout classes", () => {
     render(
       <ToggleGroup type="single" aria-label="devices">
@@ -19,12 +19,7 @@ describe("[components/ui/toggle-group.tsx](components/ui/toggle-group.tsx:1)", (
 
   test("ToggleGroupItem inherits variant and size from context", () => {
     render(
-      <ToggleGroup
-        type="single"
-        aria-label="group"
-        variant="outline"
-        size="sm"
-      >
+      <ToggleGroup type="single" aria-label="group" variant="outline" size="sm">
         <ToggleGroupItem value="one">One</ToggleGroupItem>
       </ToggleGroup>
     );
@@ -39,12 +34,7 @@ describe("[components/ui/toggle-group.tsx](components/ui/toggle-group.tsx:1)", (
 
   test("item-level variant and size override context when provided", () => {
     render(
-      <ToggleGroup
-        type="single"
-        aria-label="group"
-        variant="outline"
-        size="sm"
-      >
+      <ToggleGroup type="single" aria-label="group" variant="outline" size="sm">
         <ToggleGroupItem value="one" variant="default" size="lg">
           One
         </ToggleGroupItem>
@@ -60,11 +50,7 @@ describe("[components/ui/toggle-group.tsx](components/ui/toggle-group.tsx:1)", (
 
   test("supports single-select behavior wiring without runtime errors", () => {
     render(
-      <ToggleGroup
-        type="single"
-        aria-label="letters"
-        defaultValue="a"
-      >
+      <ToggleGroup type="single" aria-label="letters" defaultValue="a">
         <ToggleGroupItem value="a">A</ToggleGroupItem>
         <ToggleGroupItem value="b">B</ToggleGroupItem>
       </ToggleGroup>
@@ -83,11 +69,7 @@ describe("[components/ui/toggle-group.tsx](components/ui/toggle-group.tsx:1)", (
 
   test("multi-select (type=multiple) wiring works without errors", () => {
     render(
-      <ToggleGroup
-        type="multiple"
-        aria-label="multi"
-        defaultValue={["a"]}
-      >
+      <ToggleGroup type="multiple" aria-label="multi" defaultValue={["a"]}>
         <ToggleGroupItem value="a">A</ToggleGroupItem>
         <ToggleGroupItem value="b">B</ToggleGroupItem>
       </ToggleGroup>

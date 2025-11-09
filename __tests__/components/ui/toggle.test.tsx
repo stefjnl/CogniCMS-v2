@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Toggle } from "@/components/ui/toggle";
 
-describe("[components/ui/toggle.tsx](components/ui/toggle.tsx:1)", () => {
+describe("components/ui/toggle", () => {
   test("renders toggle root with base classes", () => {
     render(<Toggle aria-label="toggle" />);
 
@@ -11,17 +11,13 @@ describe("[components/ui/toggle.tsx](components/ui/toggle.tsx:1)", () => {
 
     const classes = toggle.getAttribute("class") || "";
     expect(classes).toContain("inline-flex");
-    expect(classes).toContain("data-[state=on]:bg-accent".split("data-")[0] || "inline-flex"); // structural sanity
+    expect(classes).toContain(
+      "data-[state=on]:bg-accent".split("data-")[0] || "inline-flex"
+    ); // structural sanity
   });
 
   test("supports variant and size props", () => {
-    render(
-      <Toggle
-        aria-label="outline-toggle"
-        variant="outline"
-        size="sm"
-      />
-    );
+    render(<Toggle aria-label="outline-toggle" variant="outline" size="sm" />);
 
     const toggle = screen.getByLabelText("outline-toggle");
     const classes = toggle.getAttribute("class") || "";
@@ -47,13 +43,7 @@ describe("[components/ui/toggle.tsx](components/ui/toggle.tsx:1)", () => {
   test("respects disabled prop", () => {
     const onClick = jest.fn();
 
-    render(
-      <Toggle
-        aria-label="disabled-toggle"
-        disabled
-        onClick={onClick}
-      />
-    );
+    render(<Toggle aria-label="disabled-toggle" disabled onClick={onClick} />);
 
     const toggle = screen.getByLabelText("disabled-toggle");
     expect(toggle).toBeDisabled();

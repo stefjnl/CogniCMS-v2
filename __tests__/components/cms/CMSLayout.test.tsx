@@ -4,31 +4,46 @@ import { CMSLayout } from "@/components/cms/CMSLayout";
 import { ContentProvider } from "@/lib/state/ContentContext";
 import { ContentSchema } from "@/types/content";
 
-function renderWithProvider(ui: React.ReactElement, content?: Partial<ContentSchema>) {
+function renderWithProvider(
+  ui: React.ReactElement,
+  content?: Partial<ContentSchema>
+) {
   const base: ContentSchema = {
-    id: "test",
-    title: "Test",
+    metadata: {
+      title: "Test",
+      description: "Test Description",
+      lastModified: new Date().toISOString(),
+    },
     sections: [
       {
         id: "hero",
         label: "Hero",
         type: "hero",
+        selector: "section.hero",
         content: {
           heading: "Hero",
           subheading: "Sub",
           ctaText: "CTA",
+          ctaUrl: "#",
           urgencyText: "Now",
+          logoAlt: "Logo",
         },
       },
     ],
+    assets: {
+      images: [],
+      links: [],
+    },
   };
 
   return render(
-    <ContentProvider initialContent={{ ...base, ...content }}>{ui}</ContentProvider>
+    <ContentProvider initialContent={{ ...base, ...content }}>
+      {ui}
+    </ContentProvider>
   );
 }
 
-describe("[components/cms/CMSLayout.tsx](components/cms/CMSLayout.tsx:1)", () => {
+describe("components/cms/CMSLayout", () => {
   test("renders without errors within ContentProvider", () => {
     renderWithProvider(<CMSLayout />);
 
@@ -49,9 +64,7 @@ describe("[components/cms/CMSLayout.tsx](components/cms/CMSLayout.tsx:1)", () =>
     renderWithProvider(<CMSLayout />);
 
     // Left side contains Section Navigator heading label from ContentEditor
-    expect(
-      screen.getByText(/content sections/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/content sections/i)).toBeInTheDocument();
 
     // Right side contains Preview title
     expect(screen.getByText(/preview/i)).toBeInTheDocument();
@@ -61,13 +74,9 @@ describe("[components/cms/CMSLayout.tsx](components/cms/CMSLayout.tsx:1)", () =>
     renderWithProvider(<CMSLayout />);
 
     // ActiveSection is null initially, ContentEditor shows empty state
-    expect(
-      screen.getByText(/no section selected/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/no section selected/i)).toBeInTheDocument();
 
     // Preview pane shows loading placeholder before HTML is set
-    expect(
-      screen.getByText(/loading preview/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/loading preview/i)).toBeInTheDocument();
   });
 });

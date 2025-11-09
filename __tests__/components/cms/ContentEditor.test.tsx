@@ -10,7 +10,9 @@ jest.mock("@/lib/state/ContentContext", () => ({
 
 // Mock child components to assert integration without depending on their internals
 jest.mock("@/components/cms/SectionNavigator", () => ({
-  SectionNavigator: () => <div data-testid="section-navigator">SectionNavigator</div>,
+  SectionNavigator: () => (
+    <div data-testid="section-navigator">SectionNavigator</div>
+  ),
 }));
 jest.mock("@/components/cms/EditorForm", () => ({
   EditorForm: () => <div data-testid="editor-form">EditorForm</div>,
@@ -18,7 +20,7 @@ jest.mock("@/components/cms/EditorForm", () => ({
 
 const mockedUseContent = useContent as jest.MockedFunction<typeof useContent>;
 
-describe("[components/cms/ContentEditor.tsx](components/cms/ContentEditor.tsx:1)", () => {
+describe("components/cms/ContentEditor", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -40,9 +42,7 @@ describe("[components/cms/ContentEditor.tsx](components/cms/ContentEditor.tsx:1)
 
     render(<ContentEditor />);
 
-    expect(
-      screen.getByText(/no section selected/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/no section selected/i)).toBeInTheDocument();
     expect(
       screen.getByText(/select a section from the list above to start editing/i)
     ).toBeInTheDocument();
@@ -57,9 +57,7 @@ describe("[components/cms/ContentEditor.tsx](components/cms/ContentEditor.tsx:1)
     render(<ContentEditor />);
 
     expect(screen.getByTestId("editor-form")).toBeInTheDocument();
-    expect(
-      screen.queryByText(/no section selected/i)
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/no section selected/i)).not.toBeInTheDocument();
   });
 
   test("layout structure: has container with expected classes", () => {

@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Label } from "@/components/ui/label";
 
-describe("[components/ui/label.tsx](components/ui/label.tsx:1)", () => {
+describe("components/ui/label", () => {
   test("renders label element with base classes", () => {
     render(<Label htmlFor="field">Name</Label>);
 

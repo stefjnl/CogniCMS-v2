@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import { PreviewPane } from "@/components/cms/PreviewPane";
 import { useContent } from "@/lib/state/ContentContext";
 
@@ -73,15 +79,13 @@ function buildContext(
     currentContent: overrides?.currentContent ?? createBaseContent(),
     originalHtml: overrides?.originalHtml ?? "<html><body>BASE</body></html>",
     previewDevice: overrides?.previewDevice ?? "desktop",
-    setPreviewDevice:
-      overrides?.setPreviewDevice ?? jest.fn((d) => d),
+    setPreviewDevice: overrides?.setPreviewDevice ?? jest.fn((d) => d),
     showEditableRegions: overrides?.showEditableRegions ?? true,
-    toggleEditableRegions:
-      overrides?.toggleEditableRegions ?? jest.fn(),
+    toggleEditableRegions: overrides?.toggleEditableRegions ?? jest.fn(),
   };
 }
 
-describe("[components/cms/PreviewPane.tsx](components/cms/PreviewPane.tsx:1)", () => {
+describe("components/cms/PreviewPane", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     mockedUseContent.mockReset();
@@ -162,9 +166,7 @@ describe("[components/cms/PreviewPane.tsx](components/cms/PreviewPane.tsx:1)", (
     const originalHtml = "<html><body>ORIG ERR2</body></html>";
     const currentContent = createBaseContent();
 
-    (global.fetch as jest.Mock).mockRejectedValueOnce(
-      new Error("network")
-    );
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("network"));
 
     mockContext({ originalHtml, currentContent });
 

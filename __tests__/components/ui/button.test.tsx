@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Button, buttonVariants } from "@/components/ui/button";
 
-describe("[components/ui/button.tsx](components/ui/button.tsx:1)", () => {
+describe("components/ui/button", () => {
   test("renders with default variant and size", () => {
     render(<Button>Click me</Button>);
 

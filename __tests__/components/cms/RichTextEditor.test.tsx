@@ -49,19 +49,14 @@ jest.mock("@tiptap/react", () => {
 // StarterKit is only used as an extension; a lightweight mock is sufficient
 jest.mock("@tiptap/starter-kit", () => ({}));
 
-describe("[components/cms/RichTextEditor.tsx](components/cms/RichTextEditor.tsx:1)", () => {
+describe("components/cms/RichTextEditor", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetHTML.mockReturnValue("<p>initial</p>");
   });
 
   test("initializes editor and renders EditorContent", () => {
-    render(
-      <RichTextEditor
-        value="<p>initial</p>"
-        onChange={jest.fn()}
-      />
-    );
+    render(<RichTextEditor value="<p>initial</p>" onChange={jest.fn()} />);
 
     expect(screen.getByTestId("editor-content")).toBeInTheDocument();
   });
@@ -88,9 +83,7 @@ describe("[components/cms/RichTextEditor.tsx](components/cms/RichTextEditor.tsx:
     // change it so the hook detects difference
     mockGetHTML.mockReturnValue("<p>old</p>");
 
-    rerender(
-      <RichTextEditor value="<p>updated</p>" onChange={onChange} />
-    );
+    rerender(<RichTextEditor value="<p>updated</p>" onChange={onChange} />);
 
     expect(mockSetContent).toHaveBeenCalledWith("<p>updated</p>");
   });
@@ -107,12 +100,7 @@ describe("[components/cms/RichTextEditor.tsx](components/cms/RichTextEditor.tsx:
   });
 
   test("toolbar buttons call editor.chain() APIs", () => {
-    render(
-      <RichTextEditor
-        value="<p>initial</p>"
-        onChange={jest.fn()}
-      />
-    );
+    render(<RichTextEditor value="<p>initial</p>" onChange={jest.fn()} />);
 
     const boldButton = screen.getByText("B");
     const italicButton = screen.getByText("I");

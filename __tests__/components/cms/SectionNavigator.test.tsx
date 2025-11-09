@@ -54,7 +54,7 @@ function createSections() {
   ];
 }
 
-describe("[components/cms/SectionNavigator.tsx](components/cms/SectionNavigator.tsx:1)", () => {
+describe("components/cms/SectionNavigator", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -102,9 +102,9 @@ describe("[components/cms/SectionNavigator.tsx](components/cms/SectionNavigator.
 
     render(<SectionNavigator />);
 
-    const heroTrigger = screen.getAllByTestId("accordion-trigger").find((el) =>
-      el.textContent?.includes("Hero Section")
-    );
+    const heroTrigger = screen
+      .getAllByTestId("accordion-trigger")
+      .find((el) => el.textContent?.includes("Hero Section"));
     expect(heroTrigger).toBeTruthy();
     // The component adds bg-blue-50 text-blue-700 font-medium for active;
     // here we just assert that className contains bg-blue-50.
@@ -125,9 +125,9 @@ describe("[components/cms/SectionNavigator.tsx](components/cms/SectionNavigator.
 
     render(<SectionNavigator />);
 
-    const heroTrigger = screen.getAllByTestId("accordion-trigger").find((el) =>
-      el.textContent?.includes("Hero Section")
-    );
+    const heroTrigger = screen
+      .getAllByTestId("accordion-trigger")
+      .find((el) => el.textContent?.includes("Hero Section"));
     expect(heroTrigger).toBeTruthy();
 
     fireEvent.click(heroTrigger as HTMLElement);
